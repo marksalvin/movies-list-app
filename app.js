@@ -115,7 +115,9 @@ const effects = {
  */
 const renderMoviesList = (state, { dispatch, dispatchEffect }) => {
   let listHTML = '';
-  if (state.items && state.items.length && state.items.length > 0) {
+  if (state.isFetchingItems) {
+    listHTML = '<p class="results__loading">Loading...</p>';
+  } else if (state.items && state.items.length && state.items.length > 0) {
     listHTML = `
       <h1>Results</h1>
       <table>
