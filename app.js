@@ -204,7 +204,7 @@ const renderApp = (root, { dispatch, dispatchEffect }) => {
       dispatchEffect({
         type: FETCH_MOVIES_REQUEST,
         query: document.getElementById('search__query').value,
-      })
+      });
     },
     false
   );
