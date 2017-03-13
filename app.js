@@ -38,6 +38,17 @@ const createStore = (reducers = {}, effects = {}, initialState = {}) => {
 };
 
 /**
+ * Helpers
+ */
+const buildMovieObject = movie => ({
+  title: movie.title,
+  thumbnail: `https://image.tmdb.org/t/p/w92/${movie.poster_path}`,
+  rating: movie.vote_average,
+  description: movie.overview,
+  showDescription: false,
+});
+
+/**
  * The applications state change pipeline
  */
 const FETCH_MOVIES_REQUEST = 'FETCH_MOVIES_REQUEST';
@@ -61,13 +72,7 @@ const fetchMoviesRequestEffect = (state, action, { dispatch }) => action.query &
       dispatch({
         type: FETCH_MOVIES_SUCCESS,
         // Undefined results will be caught below
-        data: response.results.map((movie, index) => ({
-          title: movie.title,
-          thumbnail: `https://image.tmdb.org/t/p/w92/${movie.poster_path}`,
-          rating: movie.vote_average,
-          description: movie.overview,
-          showDescription: false,
-        })),
+        data: response.results.map((movie, index) => buildMovieObject(movie)),
       }))
     .catch(error =>
       dispatch({
@@ -87,11 +92,13 @@ const fetchMoviesFailure = (state, action) =>
 
 const showMovieDescription = (state, action) => {
   let items;
+
   if (state.items && state.items.length && state.items.length > 0) {
     items = state.items.map((item, index) => {
       if (index === action.index) {
         return Object.assign({}, item, { showDescription: true });
       }
+      
       return Object.assign({}, item, { showDescription: false });
     });
   }
